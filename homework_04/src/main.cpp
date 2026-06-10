@@ -1,3 +1,6 @@
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -7,6 +10,11 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    std::ifstream input{argv[1]};
+    if (!input) {
+        std::cerr << "error: failed to open input file: " << argv[1] << '\n';
+        return 2;
+    }
     // TODO: implement wheel odometry for a 4-wheel differential-drive UGV.
     //
     // Model parameters:
@@ -18,6 +26,13 @@ int main(int argc, char** argv) {
     //         timestamp_ms fl_ticks fr_ticks bl_ticks br_ticks
     // Output: a table on stdout, starting from the second sample:
     //         timestamp_ms x y theta
+
+    std::cout <<"Path"<< "\n";
+
+    for (int i = 0; i < argc; i++) 
+    {
+        std::cout << "argv[" << i << "] = " << argv[i] << "\n";
+    }
 
     return 0;
 }
