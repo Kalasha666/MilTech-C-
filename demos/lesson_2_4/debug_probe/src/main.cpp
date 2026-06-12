@@ -67,9 +67,16 @@ ProbeSample parse_sample(char line[]) {
     (void)field_count;
 
     ProbeSample sample{};
-    sample.seq = parse_int(fields[0]);
-    sample.battery_v = parse_double(fields[1]);
-    sample.satellites = parse_int(fields[2]);
+
+    if(field_count > 0) 
+       sample.seq = parse_int(fields[0]);
+
+    if(field_count > 1)    
+        sample.battery_v = parse_double(fields[1]);
+
+    if(field_count > 2)
+        sample.satellites = parse_int(fields[2]);
+        
     return sample;
 }
 
@@ -115,6 +122,7 @@ int main(int argc, char** argv) {
     std::cout << "battery_v " << sample.battery_v << '\n';
     std::cout << "satellites " << sample.satellites << '\n';
     std::cout << "health " << health << '\n';
+    delete[] health;
 
     return 0;
 }

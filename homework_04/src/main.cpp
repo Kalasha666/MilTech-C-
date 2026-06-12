@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
     }
 
     std::ifstream input{argv[1]};
+
     if (!input) {
         std::cerr << "error: failed to open input file: " << argv[1] << '\n';
         return 2;
@@ -27,7 +28,7 @@ int main(int argc, char** argv) {
     // Output: a table on stdout, starting from the second sample:
     //         timestamp_ms x y theta
 
-    std::cout <<"Path"<< "\n";
+    std::cout <<"Path 5"<< "\n";
 
     for (int i = 0; i < argc; i++) 
     {
