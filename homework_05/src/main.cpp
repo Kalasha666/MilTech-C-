@@ -15,11 +15,8 @@ int main(int argc, char** argv) {
 
     int count = calculate_total_frames_count(argv[1]);
     Frame* frames = count > 0 ? new Frame[count] : nullptr;
-    std::cout << "Test 0 " << "\n";
     read_frames(argv[1], frames, count);
-    std::cout << "Test 1 " << "\n";
     Summary summary = summarize(frames, count);
-    std::cout << "Test 2 " << "\n";
     delete[] frames;
     print_summary(summary);
 

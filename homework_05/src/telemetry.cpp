@@ -126,19 +126,43 @@ Frame parse_frame(char line[]) {
     char* fields[EXPECTED_FIELD_COUNT] = {};
     const int field_count = split_line(line, fields, EXPECTED_FIELD_COUNT);
     Frame frame{};
+    frame.valid = true;
     bool timestamp_ms_result = parse_long(fields[0], frame.timestamp_ms);
     bool seq_result = parse_int(fields[1], frame.seq);
     bool voltage_v_result = parse_double(fields[2], frame.voltage_v);
+
+    if(voltage_v_result && frame.voltage_v < 0.0)
+    {
+        std::cerr << "error: voltage isn't correct : " << frame.voltage_v << '\n';
+        frame.valid = false;
+    }
+
     bool current_a_result = parse_double(fields[3], frame.current_a);
     bool temperature_c_result = parse_double(fields[4], frame.temperature_c);
+
+    if(temperature_c_result && (frame.temperature_c < -40.0 || frame.temperature_c > 120.0))
+    {
+        std::cerr << "error: temperature isn't correct : " << frame.temperature_c << '\n';
+        frame.valid = false;
+    }
+
     bool gps_fix_result = parse_int(fields[5], frame.gps_fix);
+
+    if(frame.gps_fix != 0 && frame.gps_fix != 1)
+    {
+        std::cerr << "error: gps isn't correct : " << frame.gps_fix << '\n';
+        frame.valid = false;
+    }
+
     bool satellites_result = parse_int(fields[6], frame.satellites);
 
-    if(timestamp_ms_result || seq_result || voltage_v_result || current_a_result || temperature_c_result || gps_fix_result || satellites_result)
+    if(satellites_result && frame.satellites < 0)
     {
-        frame.valid = true;
+        std::cerr << "error: satellites isn't correct : " << frame.satellites << '\n';
+        frame.valid = false;
     }
-    else
+
+    if(!timestamp_ms_result || !seq_result || !voltage_v_result || !current_a_result || !temperature_c_result || !gps_fix_result || !satellites_result)
     {
         frame.valid = false;
     }
@@ -184,6 +208,19 @@ int read_frames(const char* path, Frame frames[], int max_frames) {
             ++count;
         }
     }
+
+    if(count > 1)
+        for (int i = 1; i < count; ++i) {
+            if (frames[i].timestamp_ms <= frames[i - 1].timestamp_ms) {
+                std::cerr << "error: timestamp_ms doesn't grow at index: [" << i << "] - [" << i-1 << "]" << "\n";
+                frames[i].valid = false;
+            }
+
+            if(frames[i].seq - frames[i - 1].seq != 1) {
+                std::cerr << "error: seq doesn't grow by 1 at index: [" << i << "] - [" << i-1 << "]" << "\n";
+                frames[i].valid = false;
+            }
+        }
 
     return count;
 }
