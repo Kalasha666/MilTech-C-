@@ -1,6 +1,10 @@
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include "telemetry.hpp"
 
-#include <iostream>
 
 int main(int argc, char** argv) {
     // The executable expects exactly one telemetry log path.
@@ -9,10 +13,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    Frame frames[MAX_TELEMETRY_FRAMES];
-    const int frame_count = read_frames(argv[1], frames, MAX_TELEMETRY_FRAMES);
-
-    const Summary summary = summarize(frames, frame_count);
+    int count = calculate_total_frames_count(argv[1]);
+    Frame* frames = count > 0 ? new Frame[count] : nullptr;
+    std::cout << "Test 0 " << "\n";
+    read_frames(argv[1], frames, count);
+    std::cout << "Test 1 " << "\n";
+    Summary summary = summarize(frames, count);
+    std::cout << "Test 2 " << "\n";
+    delete[] frames;
     print_summary(summary);
 
     return 0;
