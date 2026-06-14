@@ -185,12 +185,14 @@ int read_frames(const char* path, Frame frames[], int max_frames) {
     }
 
     int count = 0;
+    int line_number = 0;
     char line[MAX_LINE_LENGTH];
 
     while (input.getline(line, MAX_LINE_LENGTH)) {
 
         if (line[0] == '\0') {
-            std::cerr << "error: line is empty: " << "\n";
+            std::cerr << "error: line is empty: " << line_number << "\n";
+            ++line_number;
             continue;
         }
 
@@ -202,25 +204,42 @@ int read_frames(const char* path, Frame frames[], int max_frames) {
             std::cerr << "error: invalid fields count: " << field_count << "\n";
             continue;
         }
-
+        
         if (count < max_frames) {
             frames[count] = parse_frame(line);
             ++count;
         }
+
+        ++line_number;
     }
 
     if(count > 1)
         for (int i = 1; i < count; ++i) {
-            if (frames[i].timestamp_ms <= frames[i - 1].timestamp_ms) {
+
+            if(frames[i].timestamp_ms == frames[i - 1].timestamp_ms)
+            {
+                std::cerr << "error: timestamp_ms is the same at index: [" << i << "] - [" << i-1 << "]" << "\n";
+                frames[i].valid = false;
+            }
+            else if (frames[i].timestamp_ms <= frames[i - 1].timestamp_ms) {
                 std::cerr << "error: timestamp_ms doesn't grow at index: [" << i << "] - [" << i-1 << "]" << "\n";
                 frames[i].valid = false;
             }
 
+            if(frames[i].seq == frames[i - 1].seq )
+            {
+                std::cerr << "error: seq is the same at index: [" << i << "] - [" << i-1 << "]" << "\n";
+                frames[i].valid = false;
+            }
             if(frames[i].seq - frames[i - 1].seq != 1) {
                 std::cerr << "error: seq doesn't grow by 1 at index: [" << i << "] - [" << i-1 << "]" << "\n";
                 frames[i].valid = false;
             }
         }
+    else
+    {
+        std::cerr << "error: file is empty\n";
+    }
 
     return count;
 }
