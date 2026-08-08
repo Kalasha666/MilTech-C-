@@ -1,41 +1,39 @@
-# Prerequisites
-*.d
+# Директорії збірки та локальний output мають відтворюватися з CMake.
+build/
+build-*/
+out/
 
-# Compiled Object files
-*.slo
-*.lo
+# CMake генерує ці файли при in-source або ручних локальних збірках.
+CMakeCache.txt
+CMakeFiles/
+CTestTestfile.cmake
+Makefile
+cmake_install.cmake
+compile_commands.json
+install_manifest.txt
+_deps/
+
+# Мінімальний набір compiled/debug артефактів для C++ прикладів.
+*.d
 *.o
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+*.a
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
 *.exe
 *.out
-*.app
+*.dSYM/
+*.pdb
+core
+core.*
 
-# debug information files
-*.dwo
+# Метадані операційної системи не є частиною навчального репозиторію.
+.DS_Store
+Thumbs.db
+homework_03/MilTech-C-1.xcodeproj/xcuserdata/kalasha666.xcuserdatad/xcschemes/xcschememanagement.plist
+homework_03/MilTech-C-1.xcodeproj/xcuserdata/kalasha666.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+homework_03/MilTech-C-1.xcodeproj/xcshareddata/xcschemes/MilTech-C-1.xcscheme
+homework_03/MilTech-C-1.xcodeproj/project.xcworkspace/xcuserdata/kalasha666.xcuserdatad/UserInterfaceState.xcuserstate
+homework_03/MilTech-C-1.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+homework_03/MilTech-C-1.xcodeproj/project.pbxproj
